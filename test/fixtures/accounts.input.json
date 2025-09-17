@@ -1,0 +1,11 @@
+{
+    "123456789874": {
+        "Name": "account-one"
+    },
+    "369852147896": {
+        "Name": "account-two"
+    },
+    "369852147898": {
+        "Name": "account-without-config"
+    }
+}

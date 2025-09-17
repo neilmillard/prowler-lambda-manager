@@ -1,0 +1,18 @@
+{
+    "8136024xxxxx": {
+        "Name": "root",
+        "Groups": []
+    },
+    "3245999xxxxx": {
+        "Name": "production",
+        "Groups": []
+    },
+    "1327328xxxxx": {
+        "Name": "development",
+        "Groups": []
+    },
+    "3049231xxxxx": {
+        "Name": "sandbox",
+        "Groups": []
+    }
+}

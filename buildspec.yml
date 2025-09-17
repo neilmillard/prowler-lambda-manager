@@ -1,0 +1,47 @@
+version: 0.2
+env:
+  shell: bash
+  parameter-store:
+    GITHUB_API_TOKEN: "/service_accounts/github_api_token"
+    GITHUB_API_USER: "/service_accounts/github_api_user"
+    GITHUB_API_EMAIL: "/service_accounts/github_api_email"
+    GPG_PRIVATE_KEY_1: "psbuildmdtp_gpg_private_key_1"
+    GPG_PRIVATE_KEY_2: "psbuildmdtp_gpg_private_key_2"
+    GPG_PRIVATE_KEY_3: "psbuildmdtp_gpg_private_key_3"
+  git-credential-helper: yes
+
+phases:
+  install:
+    on-failure: ABORT
+    commands:
+      - echo "Running setup....."
+      - make setup
+
+  pre_build:
+    on-failure: ABORT
+    commands:
+      - echo "Running tests....."
+      - make test
+      - echo "Setting up GPG....."
+      - ./setup_gpg.sh
+
+  build:
+    on-failure: ABORT
+    commands:
+      - echo "Creating deployment package....."
+      - make package
+      - |
+        if [[ "${ENVIRONMENT}" == "production" ]] || [[ "${ENVIRONMENT}" == "development" ]]; then
+          echo "Deploying into ${ENVIRONMENT}"
+          make publish-${ENVIRONMENT}
+        fi
+      - |
+        if [[ "${ENVIRONMENT}" != "development" ]] && [[ "${ENVIRONMENT}" != "production" ]]; then
+          echo "Deploying into Sandbox"
+          make publish-sandbox
+        fi
+      - |
+        if [[ "${ENVIRONMENT}" == "development" ]]; then
+          echo "Creating pull request in platsec-terraform"
+          make pr-for-development
+        fi
