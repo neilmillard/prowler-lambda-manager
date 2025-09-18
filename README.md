@@ -1,5 +1,5 @@
 
-# PlatSec Prowler Checks
+# Prowler Checks
 
 [AWS](https://aws.amazon.com/) accounts on the Platform need to be benchmarked for security compliance on a scheduled basis.
 Infrastructure that is not compliant needs to be reported to the Teams that own the accounts for remediation.
@@ -21,9 +21,6 @@ This solution will deliver the capability of scheduled checks against MDTP’s A
 
 This project allows for teams to create their own custom checks.  A check is essentially a Bash script that executes API calls against the AWS cloud platform.
 
-PlatSec has created a group that is a cut down of CIS level 2 checks and this is to be considered as the baseline security stance that will be run against all accounts.
-
-The baseline checks are called group20_Platsec. These will always be run against *all* accounts in the organization. Tests set by the teams will be run in addition to the baseline checks. If teams have not set their own checks, the baseline checks will still be run.
 
 ## Getting Started
 
@@ -54,7 +51,7 @@ Before running tests, you will need to setup the environment. To do this, run `m
 
 ## Architecture
 
-PlatSec has adopted a serverless architecture for running the prowler checks. Instead of provisioning EC2 instances, which may take a while to become ready, or be running 24/7/365 when only needed for 15 mins a day/week, the system utilises the following AWS services:
+Based on a serverless architecture for running the prowler checks. Instead of provisioning EC2 instances, which may take a while to become ready, or be running 24/7/365 when only needed for 15 mins a day/week, the system utilises the following AWS services:
 
 * S3
 * lambda
@@ -82,13 +79,13 @@ Deployment is via a [AWS Codebuild](https://aws.amazon.com/codebuild/) job, whos
 <a name="pr_builder"></a>deployment_scripts/release_terraform_pr.py
 This script has several functions. It performs the following tasks:
 
-1. Clone platsec terraform repo.
+1. Clone terraform repo.
 2. Check out a new branch in the repo.
 3. In terraform variables file for the environment:
     * update python_runtime variable.
     * replace artifact version numbers with those of the latest tag.
 4. Commits & pushes the changes.
-5. Creates a new PR in the platsec terraform repo.
+5. Creates a new PR in the terraform repo.
 
 ### Tagging
 
@@ -103,7 +100,7 @@ N.N.N is the version number and must follow the [SemVer](https://semver.org) for
 
 ### Terraform
 
-Pushing a new tag will result in a new pull request being created in the platsec-terraform branch, with the tag of the new code being inserted into the relevant terraform template file. The runtime will also be replaced where appropriate.
+Pushing a new tag will result in a new pull request being created in the terraform branch, with the tag of the new code being inserted into the relevant terraform template file. The runtime will also be replaced where appropriate.
 
 ## Development
 
@@ -131,7 +128,7 @@ If you intend to use AWS Codebuild locally, you will need to create a local `.en
 There are two python scripts, which will be deployed to [AWS Lambda](https://aws.amazon.com/lambda/).
 They can be found in *src/handlers/*
 
-**Platsec Prowler Lambda Manager Script**
+**Prowler Lambda Manager Script**
 This is the orchestrator. It obtains lists of all accounts in the [AWS Organization](https://aws.amazon.com/organizations/), along with the groups of checks to by run on the specific account. It then sends these, individually, to [SQS](https://aws.amazon.com/sqs/)
 The payload for each, will look liks this:
 
